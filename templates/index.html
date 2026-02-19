@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>wRC+ Predictor</h1>
+        <p>This app takes metrics from Baseball Savant to predict a player's wRC+</p>
+        <a href="/models">Models Explanation</a><br>
+        <a href="https://baseballsavant.mlb.com/" target="_blank">Baseball Savant</a><br>
+        <a href="https://www.fangraphs.com/" target="_blank">Fangraphs</a><br><br>
+        <form action="/predict" method="POST">
+            Exit Velo: <input type="text" name="exit_velocity"><br>
+            BRL % : <input type="text" name="brl_percent"><br>
+            Hard Hit %: <input type="text" name="hh_percent"><br>
+            Chase %: <input type="text" name="chase_percent"><br>
+            Whiff %: <input type="text" name="whiff_percent"><br>
+            K %: <input type="text" name="k_percent"><br>
+            BB %: <input type="text" name="bb_percent"><br>
+            wrC+: {{predictions}}<br>
+            <input type="submit" value="Predict">
+        </form>
+    </body>
+</html>
