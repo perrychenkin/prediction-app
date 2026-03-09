@@ -1,5 +1,0 @@
-,combo,count,mean_score,total_std,total_ci_range,stability
-0,"('brl_percent', 'k_percent', 'bb_percent')",2,6.104213664160773,0.3120640759369029,1.1193264195112285,0.1745542184406892
-1,"('brl_percent', 'exit_velocity', 'k_percent', 'bb_percent')",2,6.145070571810798,0.3513974111977763,1.2457571303997383,0.19580525197347076
-3,"('brl_percent', 'k_percent', 'bb_percent', 'chase_percent')",2,6.117160272982342,0.48891162229813967,1.6335529968847862,0.26732522631772854
-4,"('brl_percent', 'exit_velocity', 'k_percent', 'bb_percent', 'whiff_percent')",2,6.286811652177459,0.46578452733483505,1.5537806559925,0.25455187488809766
