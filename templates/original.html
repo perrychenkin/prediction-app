@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+        <h1>wRC+ Predictor (Legacy)</h1>
+        <p>This mirrors the original experience before the redesign.</p>
+        <a href="/original_docs">Documentation</a><br>
+        <a href="https://baseballsavant.mlb.com/" target="_blank">Baseball Savant</a><br>
+        <a href="https://www.fangraphs.com/" target="_blank">Fangraphs</a><br><br>
+        <form action="/predict" method="POST">
+            <input type="hidden" name="origin_template" value="original">
+            Exit Velo: <input type="text" name="exit_velocity" value="{{ form_values.get('exit_velocity', '') }}"><br>
+            BRL % : <input type="text" name="brl_percent" value="{{ form_values.get('brl_percent', '') }}"><br>
+            Hard Hit %: <input type="text" name="hh_percent" value="{{ form_values.get('hh_percent', '') }}"><br>
+            Chase %: <input type="text" name="chase_percent" value="{{ form_values.get('chase_percent', '') }}"><br>
+            Whiff %: <input type="text" name="whiff_percent" value="{{ form_values.get('whiff_percent', '') }}"><br>
+            K %: <input type="text" name="k_percent" value="{{ form_values.get('k_percent', '') }}"><br>
+            BB %: <input type="text" name="bb_percent" value="{{ form_values.get('bb_percent', '') }}"><br>
+            wrC+: {{ predictions }}<br>
+            <input type="submit" value="Predict">
+        </form>
+    </body>
+</html>

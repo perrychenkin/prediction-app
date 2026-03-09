@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --card: rgba(12, 15, 26, 0.8);
+            --accent: #f97316;
+            --accent-2: #38bdf8;
+            --text-soft: #cbd5f5;
+            --text-bright: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, rgba(79, 70, 229, 0.4), transparent 40%),
+                        radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.4), transparent 35%),
+                        linear-gradient(180deg, #05060b 0%, #090b13 55%, #04040a 100%);
+            min-height: 100vh;
+            font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-soft);
+        }
+
+        .page {
+            padding: 2.5rem clamp(1rem, 4vw, 3rem) 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .hero {
+            max-width: 960px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            color: var(--text-bright);
+        }
+
+        .hero p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.95rem;
+            margin-top: 0.75rem;
+        }
+
+        nav a {
+            color: var(--text-soft);
+            text-decoration: none;
+            padding-bottom: 0.2rem;
+            border-bottom: 1px solid transparent;
+        }
+
+        nav a.primary {
+            border-color: var(--accent);
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 1.2rem;
+            padding: clamp(1.5rem, 2vw, 2rem);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(5, 7, 16, 0.65);
+            backdrop-filter: blur(18px);
+        }
+
+        .card h2 {
+            margin: 0 0 0.4rem;
+            color: var(--text-bright);
+        }
+
+        .card p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .doc-list {
+            margin: 0.8rem 0 0;
+            padding-left: 1rem;
+        }
+
+        .doc-list li {
+            margin-bottom: 0.3rem;
+        }
+
+        .footer-link {
+            font-size: 0.9rem;
+            color: var(--text-soft);
+        }
+
+        .footer-link a {
+            color: var(--accent-2);
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <p class="eyebrow">Documentation</p>
+        <h1>Models Explanation</h1>
+        <p>This application uses six different random forest regression models to find the average of their wRC+ predictions. The parameters used for the models were <code>RandomForestRegressor(max_depth=10, max_features='sqrt', min_samples_split=5, n_estimators=150, n_jobs=-1, random_state=42)</code> with each model trained on a different grouping of Baseball Savant metrics.</p>
+        <nav>
+            <a href="/" class="">Home</a>
+            <a href="/documentation" class="primary">Documentation</a>
+        </nav>
+    </header>
+
+    <section class="panel-grid">
+
+        <article class="card">
+            <h2>model_1</h2>
+            <ul class="doc-list">
+                <li>brl_percent</li>
+                <li>exit_velocity</li>
+                <li>k_percent</li>
+                <li>bb_percent</li>
+                <li>chase_percent</li>
+            </ul>
+        </article>
+
+        <article class="card">
+            <h2>model_2</h2>
+            <ul class="doc-list">
+                <li>brl_percent</li>
+                <li>k_percent</li>
+                <li>bb_percent</li>
+            </ul>
+        </article>
+
+        <article class="card">
+            <h2>model_3</h2>
+            <ul class="doc-list">
+                <li>brl_percent</li>
+                <li>exit_velocity</li>
+                <li>k_percent</li>
+                <li>bb_percent</li>
+            </ul>
+        </article>
+
+        <article class="card">
+            <h2>model_4</h2>
+            <ul class="doc-list">
+                <li>brl_percent</li>
+                <li>exit_velocity</li>
+                <li>hh_percent</li>
+                <li>k_percent</li>
+                <li>bb_percent</li>
+                <li>chase_percent</li>
+            </ul>
+        </article>
+
+        <article class="card">
+            <h2>model_5</h2>
+            <ul class="doc-list">
+                <li>brl_percent</li>
+                <li>k_percent</li>
+                <li>bb_percent</li>
+                <li>chase_percent</li>
+            </ul>
+        </article>
+
+        <article class="card">
+            <h2>model_all</h2>
+            <ul class="doc-list">
+                <li>brl_percent</li>
+                <li>exit_velocity</li>
+                <li>hh_percent</li>
+                <li>k_percent</li>
+                <li>bb_percent</li>
+                <li>whiff_percent</li>
+                <li>chase_percent</li>
+            </ul>
+        </article>
+    </section>
+
+    <footer class="footer-link">
+        Created with assistance from ChatGPT Codex · <a href="https://prediction-app-mred.onrender.com/original" target="_blank" rel="noopener noreferrer">Original Site</a>
+    </footer>
+</div>
+</body>
+</html>

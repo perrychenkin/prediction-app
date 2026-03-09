@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>wRC+ Predictor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07080d;
+            --card: rgba(12, 15, 26, 0.8);
+            --accent: #f97316;
+            --accent-2: #38bdf8;
+            --text-soft: #cbd5f5;
+            --text-bright: #ffffff;
+            font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, rgba(79, 70, 229, 0.4), transparent 40%),
+                        radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.4), transparent 35%),
+                        linear-gradient(180deg, #05060b 0%, #090b13 55%, #04040a 100%);
+            color: var(--text-soft);
+            min-height: 100vh;
+        }
+
+        .page {
+            padding: 2.5rem clamp(1rem, 4vw, 3rem) 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .hero {
+            max-width: 960px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            color: var(--text-bright);
+            margin: 0;
+        }
+
+        .hero p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.95rem;
+            margin-top: 0.75rem;
+        }
+
+        nav a {
+            color: var(--text-soft);
+            text-decoration: none;
+            padding-bottom: 0.2rem;
+            border-bottom: 1px solid transparent;
+        }
+
+        nav a.primary:hover {
+            border-color: var(--accent);
+        }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.2rem;
+            padding: clamp(1.5rem, 2vw, 2rem);
+            box-shadow: 0 20px 40px rgba(5, 7, 16, 0.65);
+            backdrop-filter: blur(16px);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.35rem;
+            color: var(--text-soft);
+        }
+
+        .error-state {
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 0.75rem;
+            background: rgba(248, 113, 113, 0.15);
+            border: 1px solid rgba(248, 113, 113, 0.4);
+            color: #fecaca;
+            font-size: 0.9rem;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 0.9rem 1.05rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(15, 18, 34, 0.8);
+            color: var(--text-bright);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .submit-row {
+            margin-top: 1.5rem;
+            text-align: right;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 0.95rem 1.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #030303;
+            background: linear-gradient(120deg, var(--accent), #fb923c 65%);
+            box-shadow: 0 10px 25px rgba(247, 115, 22, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(247, 115, 22, 0.45);
+        }
+
+        .result-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .result-value {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--accent-2);
+            margin: 0;
+        }
+
+        .result-caption {
+            margin: 0;
+            color: var(--text-soft);
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            font-size: 0.85rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        footer a {
+            color: var(--accent-2);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <p class="eyebrow">Savvy hitting signals</p>
+        <h1>wRC+ Predictor</h1>
+        <p>Drop in the measured metrics from Baseball Savant and get an instant consensus wRC+ projection pulled from the trained ensemble.</p>
+        <nav>
+            <a class="primary" href="/documentation">Documentation</a>
+            <a href="https://baseballsavant.mlb.com/" target="_blank" rel="noreferrer">Baseball Savant</a>
+            <a href="https://www.fangraphs.com/" target="_blank" rel="noreferrer">Fangraphs</a>
+        </nav>
+    </header>
+
+    <section class="panel-grid">
+        <article class="card">
+            <div>
+                <p style="text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.75rem; margin-bottom: 0.4rem; color: var(--text-bright);">Input metrics</p>
+                <p style="margin:0; color: var(--text-soft);">Input a value in each field from 0 to 100.</p>
+            </div>
+            {% if model_form.errors %}
+                <div class="error-state">
+                    Please provide numbers between 0 and 100 for every metric before submitting.
+                </div>
+            {% endif %}
+            <form action="/predict" method="POST" class="form-card">
+                {{ model_form.hidden_tag() }}
+                <div class="form-grid">
+
+                    <label for="exit_velocity">Exit Velocity</label>
+                    <input type="number" name="exit_velocity" id="exit_velocity" min="0" max="100" step="0.01" value="{{ model_form.exit_velocity.data or '' }}" autocomplete="off" required>
+
+
+                    <label for="brl_percent">Barrel %</label>
+                    <input type="number" name="brl_percent" id="brl_percent" min="0" max="100" step="0.01" value="{{ model_form.brl_percent.data or '' }}" autocomplete="off" required>
+
+
+                    <label for="hh_percent">Hard Hit %</label>
+                    <input type="number" name="hh_percent" id="hh_percent" min="0" max="100" step="0.01" value="{{ model_form.hh_percent.data or '' }}" autocomplete="off" required>
+
+
+                    <label for="chase_percent">Chase %</label>
+                    <input type="number" name="chase_percent" id="chase_percent" min="0" max="100" step="0.01" value="{{ model_form.chase_percent.data or '' }}" autocomplete="off" required>
+
+
+                    <label for="whiff_percent">Whiff %</label>
+                    <input type="number" name="whiff_percent" id="whiff_percent" min="0" max="100" step="0.01" value="{{ model_form.whiff_percent.data or '' }}" autocomplete="off" required>
+
+
+                    <label for="k_percent">Strikeout %</label>
+                    <input type="number" name="k_percent" id="k_percent" min="0" max="100" step="0.01" value="{{ model_form.k_percent.data or '' }}" autocomplete="off" required>
+
+                    <label for="bb_percent">Walk %</label>
+                    <input type="number" name="bb_percent" id="bb_percent" min="0" max="100" step="0.01" value="{{ model_form.bb_percent.data or '' }}" autocomplete="off" required>
+                </div>
+                <div class="submit-row">
+                    <button type="submit">Predict wRC+</button>
+                </div>
+            </form>
+        </article>
+
+        <article class="card result-card">
+            {% if predictions is not none %}
+                <p class="result-value">{{ predictions }}</p>
+                <p class="result-caption">Consensus wRC+ across the ensemble of trained Baseball Savant models.</p>
+            {% else %}
+                <p class="result-value">---</p>
+                <p class="result-caption">Submit the input metrics to see the projected wRC+.</p>
+            {% endif %}
+        </article>
+    </section>
+
+    <footer>
+        Created with assistance from ChatGPT Codex · <a href="http://127.0.0.1:5500/templates/original.html" target="_blank" rel="noopener noreferrer">Original Site</a>
+    </footer>
+</div>
+</body>
+</html>
