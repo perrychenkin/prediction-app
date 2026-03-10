@@ -163,6 +163,33 @@
             gap: 0.75rem;
         }
 
+        .model-breakdown {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            color: var(--text-soft);
+            font-size: 0.95rem;
+        }
+
+        .model-breakdown li {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 0.35rem;
+        }
+
+        .model-breakdown li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .model-breakdown li strong {
+            color: var(--accent-2);
+        }
+
         .result-value {
             font-size: clamp(2rem, 4vw, 3rem);
             color: var(--accent-2);
@@ -260,6 +287,13 @@
             {% if predictions is not none %}
                 <p class="result-value">{{ predictions }}</p>
                 <p class="result-caption">Consensus wRC+ across the ensemble of trained Baseball Savant models.</p>
+                {% if model_breakdown %}
+                    <ul class="model-breakdown">
+                        {% for name, value in model_breakdown %}
+                            <li><span>{{ name }}</span><strong>{{ value }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             {% else %}
                 <p class="result-value">---</p>
                 <p class="result-caption">Submit the input metrics to see the projected wRC+.</p>
@@ -268,7 +302,7 @@
     </section>
 
     <footer>
-        Created with assistance from ChatGPT Codex · <a href="http://127.0.0.1:5500/templates/original.html" target="_blank" rel="noopener noreferrer">Original Site</a>
+        Design Assisted by ChatGPT Codex
     </footer>
 </div>
 </body>
