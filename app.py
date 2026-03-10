@@ -31,13 +31,14 @@ model_all=pickle.load(open("model_all.sav","rb"))
 def home():
     model_form = ModelForm()
     predictions = None
-    return render_template("index.html", model_form=model_form, predictions=predictions)
+    return render_template("index.html", model_form=model_form, predictions=predictions, model_breakdown=[])
 
 @app.route("/predict", methods=["POST"])
 def predict():
     model_form = ModelForm()
     predictions = None
 
+    model_breakdown = []
     if model_form.validate_on_submit():
         try:
             brl_percent = float(model_form.brl_percent.data)
@@ -55,21 +56,25 @@ def predict():
             model5 = [brl_percent, k_percent, bb_percent, chase_percent]
             modelall = [brl_percent, exit_velocity, hh_percent, k_percent, bb_percent, whiff_percent, chase_percent]
 
-            predictions = round(np.mean([model_all.predict([modelall])[0],
-                                        model_1.predict([model1])[0],
-                                        model_2.predict([model2])[0],
-                                        model_3.predict([model3])[0],
-                                        model_4.predict([model4])[0],
-                                        model_5.predict([model5])[0]]))
+            model_breakdown = [
+                ("model_all", model_all.predict([modelall])[0]),
+                ("model_1", model_1.predict([model1])[0]),
+                ("model_2", model_2.predict([model2])[0]),
+                ("model_3", model_3.predict([model3])[0]),
+                ("model_4", model_4.predict([model4])[0]),
+                ("model_5", model_5.predict([model5])[0]),
+            ]
+            predictions = round(np.mean([value for _, value in model_breakdown]))
         except (ValueError, TypeError):
             predictions = None
+            model_breakdown = []
 
     origin_template = request.form.get("origin_template", "modern")
     if origin_template == "original":
         form_values = {name: request.form.get(name, "") for name in LEGACY_FIELDS}
         return render_template("original.html", predictions=predictions, form_values=form_values)
 
-    return render_template("index.html", model_form=model_form, predictions=predictions)
+    return render_template("index.html", model_form=model_form, predictions=predictions, model_breakdown=[(name, round(value)) for name, value in model_breakdown])
 
 @app.route("/documentation")
 def documentation():
