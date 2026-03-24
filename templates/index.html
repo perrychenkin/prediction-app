@@ -62,6 +62,7 @@
             align-items: center;
             font-size: 0.95rem;
             margin-top: 0.75rem;
+            flex-wrap: wrap;
         }
 
         nav a {
@@ -73,6 +74,120 @@
 
         nav a.primary:hover {
             border-color: var(--accent);
+        }
+
+        .player-picker {
+            position: relative;
+            min-width: min(100%, 340px);
+            flex: 1 1 340px;
+        }
+
+        .player-picker label {
+            margin-bottom: 0.45rem;
+        }
+
+        .player-picker input {
+            width: 100%;
+            padding: 0.9rem 1.05rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(15, 18, 34, 0.8);
+            color: var(--text-bright);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .player-picker input:focus {
+            outline: none;
+            border-color: var(--accent-2);
+            transform: translateY(-1px);
+        }
+
+        .player-picker-menu {
+            position: absolute;
+            top: calc(100% + 0.45rem);
+            left: 0;
+            right: 0;
+            z-index: 10;
+            max-height: 15rem;
+            overflow-y: auto;
+            padding: 0.45rem;
+            margin: 0;
+            list-style: none;
+            border-radius: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(6, 9, 18, 0.97);
+            box-shadow: 0 18px 40px rgba(5, 7, 16, 0.7);
+            display: none;
+        }
+
+        .player-picker.is-open .player-picker-menu {
+            display: block;
+        }
+
+        .player-picker-menu button {
+            width: 100%;
+            border: none;
+            border-radius: 0.65rem;
+            padding: 0.8rem 0.9rem;
+            margin: 0;
+            text-align: left;
+            font: inherit;
+            color: var(--text-soft);
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .player-picker-menu button:hover,
+        .player-picker-menu button:focus {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--text-bright);
+            outline: none;
+            transform: none;
+        }
+
+        .player-picker-empty {
+            padding: 0.8rem 0.9rem;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.95rem;
+        }
+
+        .player-links {
+            display: none;
+            gap: 0.85rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 0.85rem;
+        }
+
+        .player-links.is-visible {
+            display: flex;
+        }
+
+        .player-links .links-label {
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .player-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.55rem 0.9rem;
+            border-radius: 999px;
+            text-decoration: none;
+            color: var(--text-bright);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(15, 18, 34, 0.72);
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .player-links a:hover {
+            transform: translateY(-1px);
+            border-color: rgba(56, 189, 248, 0.5);
+            background: rgba(56, 189, 248, 0.12);
         }
 
         .panel-grid {
@@ -163,6 +278,14 @@
             gap: 0.75rem;
         }
 
+        .result-player {
+            margin: 0;
+            font-size: 0.82rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
         .model-breakdown {
             list-style: none;
             margin: 0;
@@ -230,9 +353,37 @@
         <h1>wRC+ Predictor</h1>
         <p>Drop in the measured metrics from Baseball Savant and get an instant consensus wRC+ projection pulled from the trained ensemble.</p>
         <nav>
-            <a class="primary" href="/documentation">Documentation</a>
-            <a href="https://baseballsavant.mlb.com/" target="_blank" rel="noreferrer">Baseball Savant</a>
-            <a href="https://www.fangraphs.com/" target="_blank" rel="noreferrer">Fangraphs</a>
+            <a class="primary" id="documentation-link" href="/documentation">Documentation</a>
+            <div class="player-picker" id="player-picker">
+                <label for="player-search">Player Name</label>
+                <input
+                    type="text"
+                    id="player-search"
+                    name="player_search"
+                    placeholder="Type a name to filter"
+                    autocomplete="off"
+                    spellcheck="false"
+                    aria-autocomplete="list"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    value="{{ selected_player_name or '' }}"
+                >
+                <ul class="player-picker-menu" id="player-menu" role="listbox" aria-label="Player names">
+                    {% for name in player_names %}
+                        <li>
+                            <button type="button" data-player-name="{{ name }}">{{ name }}</button>
+                        </li>
+                    {% endfor %}
+                    {% if not player_names %}
+                        <li class="player-picker-empty">No player names found.</li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="player-links" id="player-links" aria-live="polite">
+                <span class="links-label" id="player-links-label">Selected player</span>
+                <a id="baseball-savant-link" href="#" target="_blank" rel="noreferrer">Baseball Savant</a>
+                <a id="fangraphs-link" href="#" target="_blank" rel="noreferrer">FanGraphs</a>
+            </div>
         </nav>
     </header>
 
@@ -249,6 +400,7 @@
             {% endif %}
             <form action="/predict" method="POST" class="form-card">
                 {{ model_form.hidden_tag() }}
+                <input type="hidden" name="player_name" id="player-name" value="{{ selected_player_name or '' }}">
                 <div class="form-grid">
 
                     <label for="exit_velocity">Exit Velocity</label>
@@ -285,6 +437,9 @@
 
         <article class="card result-card">
             {% if predictions is not none %}
+                {% if selected_player_name %}
+                    <p class="result-player">{{ selected_player_name }}</p>
+                {% endif %}
                 <p class="result-value">{{ predictions }}</p>
                 <p class="result-caption">Consensus wRC+ across the ensemble of trained Baseball Savant models.</p>
                 {% if model_breakdown %}
@@ -302,8 +457,136 @@
     </section>
 
     <footer>
-        Design Assisted by ChatGPT Codex
+        Created with assistance from ChatGPT Codex · <a href="https://prediction-app-mred.onrender.com/original" target="_blank" rel="noopener noreferrer">Original Site</a>
     </footer>
 </div>
+<script>
+    (function () {
+        const picker = document.getElementById("player-picker");
+        const input = document.getElementById("player-search");
+        const hiddenInput = document.getElementById("player-name");
+        const menu = document.getElementById("player-menu");
+        const items = Array.from(menu.querySelectorAll("[data-player-name]"));
+        const documentationLink = document.getElementById("documentation-link");
+        const links = document.getElementById("player-links");
+        const linksLabel = document.getElementById("player-links-label");
+        const baseballSavantLink = document.getElementById("baseball-savant-link");
+        const fangraphsLink = document.getElementById("fangraphs-link");
+
+        function setOpen(isOpen) {
+            picker.classList.toggle("is-open", isOpen);
+            input.setAttribute("aria-expanded", String(isOpen));
+        }
+
+        function updateMenu() {
+            const query = input.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            items.forEach((button) => {
+                const name = button.dataset.playerName.toLowerCase();
+                const matches = query === "" || name.startsWith(query);
+                button.parentElement.hidden = !matches;
+                if (matches) {
+                    visibleCount += 1;
+                }
+            });
+
+            menu.hidden = false;
+            setOpen(true);
+            if (!visibleCount) {
+                let emptyState = menu.querySelector(".player-picker-empty");
+                if (!emptyState) {
+                    emptyState = document.createElement("li");
+                    emptyState.className = "player-picker-empty";
+                    emptyState.textContent = "No matching players.";
+                    menu.appendChild(emptyState);
+                }
+            } else {
+                const emptyState = menu.querySelector(".player-picker-empty");
+                if (emptyState) {
+                    emptyState.remove();
+                }
+            }
+        }
+
+        function showLinks(playerName) {
+            links.classList.remove("is-visible");
+            linksLabel.textContent = playerName;
+            baseballSavantLink.href = "#";
+            fangraphsLink.href = "#";
+            documentationLink.href = `/documentation?name=${encodeURIComponent(playerName)}`;
+
+            fetch(`/player-links?name=${encodeURIComponent(playerName)}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.baseball_savant) {
+                        baseballSavantLink.href = data.baseball_savant;
+                    }
+                    if (data.fangraphs) {
+                        fangraphsLink.href = data.fangraphs;
+                    }
+                    if (data.baseball_savant || data.fangraphs) {
+                        links.classList.add("is-visible");
+                    } else {
+                        links.classList.remove("is-visible");
+                    }
+                })
+                .catch(() => {
+                    links.classList.remove("is-visible");
+                });
+        }
+
+        function selectName(name) {
+            input.value = name;
+            hiddenInput.value = name;
+            showLinks(name);
+            setOpen(false);
+        }
+
+        input.addEventListener("focus", updateMenu);
+        input.addEventListener("input", () => {
+            hiddenInput.value = "";
+            links.classList.remove("is-visible");
+            linksLabel.textContent = "Selected player";
+            documentationLink.href = "/documentation";
+            updateMenu();
+        });
+
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                setOpen(false);
+            }
+
+            if (event.key === "Enter") {
+                const firstVisible = items.find((button) => !button.parentElement.hidden);
+                if (firstVisible) {
+                    event.preventDefault();
+                    selectName(firstVisible.dataset.playerName);
+                }
+            }
+        });
+
+        menu.addEventListener("click", (event) => {
+            const button = event.target.closest("[data-player-name]");
+            if (!button) {
+                return;
+            }
+            selectName(button.dataset.playerName);
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!picker.contains(event.target)) {
+                setOpen(false);
+            }
+        });
+
+        updateMenu();
+        if (hiddenInput.value.trim()) {
+            documentationLink.href = `/documentation?name=${encodeURIComponent(hiddenInput.value.trim())}`;
+            showLinks(hiddenInput.value.trim());
+        }
+        setOpen(false);
+    })();
+</script>
 </body>
 </html>
